@@ -1,58 +1,69 @@
 import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import { Switch, Route, Redirect } from 'react-router';
+import { withCookies } from 'react-cookie';
+import Login from './components/Login';
+import SignUp from './components/SignUp';
+import Success from './components/Success';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
-  );
+const serverURL = "https://fijb1qd4dd.execute-api.eu-west-1.amazonaws.com/dev";
+
+class App extends React.Component {
+
+  constructor () {
+    super();
+    this.state = {
+      loginChecked: false,
+      loggedIn: false }
+  }
+
+  checkLogin = () => {
+    let token = this.props.cookies.get('token');
+		if (token) {
+			fetch(serverURL + "/login", { method: "GET",
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+					'Authorization': token
+				}}
+			).then((res) => this.setState({
+				loginChecked: true,
+				loggedIn: (res.status === 200) 
+			}));
+		}
+  }
+
+  render () {
+    return (
+      <div>
+        <Switch>
+          <Route
+            path="/signup" render = {() => (<SignUp cookies={ this.props.cookies } />)}
+          />
+          <Route
+            path="/login" render = {() => (<Login cookies={ this.props.cookies } />)}
+          />
+          <Route
+            path="/" render = 
+            {() => {
+              if (!this.state.loginChecked) this.checkLogin();
+
+              let token = this.props.cookies.get('token');
+              if (token && this.state.loginChecked && this.state.loggedIn) {
+                return <Success cookies={ this.props.cookies } />
+              }
+              else if (token && !this.state.loginChecked) {
+                return <span> Loading... </span>
+              }
+              else {
+                return <Redirect to="/login" cookies={ this.props.cookies } />
+              }
+            }}
+
+          />
+        </Switch>
+      </div>
+    );
+  }
 }
 
-export default App;
+export default withCookies(App);
