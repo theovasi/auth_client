@@ -36,7 +36,6 @@ class Login extends Component {
 	handleUserIdentifierChange = (event) => {
     clearTimeout(this.timeout);
 
-		console.log(this.state)
     event.persist();
     this.setState({
       userIdentifier: event.target.value,
@@ -80,8 +79,7 @@ class Login extends Component {
     const { cookies } = this.props;
     fetch(serverURL + "login", {
       headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json"
+				"Content-Type": "application/x-www-form-urlencoded"
       },
       method: 'POST',
       body: JSON.stringify({
