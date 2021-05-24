@@ -21,8 +21,7 @@ class Login extends Component {
   };
 
   constructor(props) {
-    super(props);
-
+    super(props); 
     this.state = {
       userIdentifier: "",
       password: "",
@@ -79,7 +78,7 @@ class Login extends Component {
     const { cookies } = this.props;
     fetch(serverURL + "login", {
       headers: {
-				"Content-Type": "application/x-www-form-urlencoded"
+				"Content-Type": "application/json"
       },
       method: 'POST',
       body: JSON.stringify({
