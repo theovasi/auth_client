@@ -6,12 +6,16 @@ import { store } from './redux/store';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { CookiesProvider } from 'react-cookie';
+import { Helmet } from 'react-helmet';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <CookiesProvider>
 		<Provider store={store}>
       <BrowserRouter>
+				<Helmet>
+					<title>Auth demo</title>
+				</Helmet>
 				<App />
       </BrowserRouter>
 		</Provider>
