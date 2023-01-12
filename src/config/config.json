@@ -1,6 +1,6 @@
 {
   "production": {
-    "serverURL": "http://35.205.233.9:5000/"
+    "serverURL": "https://fijb1qd4dd.execute-api.eu-west-1.amazonaws.com/dev/"
   },
   "development": {
     "serverURL": "http://localhost:5000/"
